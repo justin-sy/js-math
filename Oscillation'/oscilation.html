@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <script>
+            const g = 9.8;
+            let m1 = 1;
+            let l0 = 200;
+            let l = 0;
+            let v = 0;
+            let k1 = 100;
+
+            let interval = 10; // In milliseconds
+
+            function simulate(){
+                const scale_x = 800;
+
+
+                const canvas = document.querySelector("#canvas");
+                const ctx = canvas.getContext("2d");
+
+                ctx.clearRect(0,0,800,600);
+                
+                let delta_t = interval/1000; // Convert back to seconds
+
+                let f = m1 * g - k1 * l;
+                let a = f/m1;
+                v += a * delta_t;
+                l += v * delta_t;
+
+                ctx.beginPath();
+
+                ctx.moveTo(400,0);
+                ctx.lineTo(400,200+scale_x*l);
+                ctx.moveTo(410,200+scale_x*l);
+                ctx.arc(400,200+scale_x*l,10,0,2*Math.PI);
+                ctx.fillStyle = "lightgreen";
+                ctx.fill();
+                ctx.stroke();
+
+                setTimeout(simulate,interval);
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick = "simulate()">Simulate!</button>
+        <canvas id = "canvas" height = "600px" width = "800px"></canvas>
+    </body>
+</html>

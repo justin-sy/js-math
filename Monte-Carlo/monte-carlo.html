@@ -1,0 +1,57 @@
+<div>
+
+    <head>
+        <script>
+            // Author: Justin Feng
+            function MonteCarlo() {
+                let sample_size = parseInt(document.getElementById("numDots").value);
+
+                let in_circle = 0;
+
+
+                const canvas = document.querySelector("#canvas");
+                const ctx = canvas.getContext("2d");
+                
+                ctx.clearRect(0,0,600,600);
+                ctx.beginPath();
+                ctx.moveTo(0,0);
+                ctx.lineTo(600,0);
+                ctx.lineTo(600,600);
+                ctx.lineTo(0,600);
+                ctx.lineTo(0,0);
+                ctx.moveTo(600,300)
+                ctx.arc(300,300,300,0,2*Math.PI);
+
+                // Iterate through each point
+                for (let i = 0; i < sample_size; i++) {
+                    // Generate random coordinate for point
+                    let x_cord = Math.random() * 2;
+                    let y_cord = Math.random() * 2;
+                    ctx.moveTo(x_cord*300,y_cord*300);
+                    ctx.arc(x_cord*300,y_cord*300,2,0,2*Math.PI);
+                    // Check if point in circle
+                    if ((x_cord - 1) ** 2 + (y_cord - 1) ** 2 <= 1) {
+                        in_circle += 1;
+                    };
+                };
+                let pi = in_circle / sample_size * 4;
+                document.getElementById("pi").innerHTML = pi;
+                
+                
+
+                
+                ctx.stroke();
+            
+            };
+
+            
+
+        </script>
+    </head>
+    <h1>Monte Carlo Method for Pi</h1>
+    Use monte carlo method to compute pi.
+    <p>Number of dots:<input id="numDots"><input type="button" name="Compute" value="Compute" onclick="MonteCarlo();"></p>
+    <p>The computed PI value is:</p>
+    <p id="pi"></p>
+    <canvas id = "canvas" height = "600px" width = "600px"></canvas>
+</div>
