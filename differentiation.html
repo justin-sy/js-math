@@ -109,10 +109,19 @@
                 let x_pos2 = x_scale*(X+delta_x)+400
                 let y_pos2 = -1*y_scale*func(id,X+delta_x)+300
 
+                let slope = (func(id,X+delta_x)-func(id,X))/delta_x
+                let y_inter = func(id,X)-slope*X
+
+                let x_pos3 = ((-300/y_scale)-y_inter)/slope*x_scale+400
+                let x_pos4 = (300/y_scale-y_inter)/slope*x_scale+400
+
                 ctx.moveTo(x_pos,y_pos);
                 ctx.lineTo(x_pos2,y_pos);
                 ctx.lineTo(x_pos2,y_pos2);
-                ctx.lineTo(x_pos,y_pos);
+                ctx.moveTo(x_pos3,600);
+                ctx.lineTo(x_pos4,0);
+                
+
 
                 ctx.stroke();
 
