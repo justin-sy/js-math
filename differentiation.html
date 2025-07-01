@@ -20,8 +20,8 @@
                 const ctx = canvas.getContext("2d");
 
                 //Get X and Delta X
-                const delta_x = parseInt(document.getElementById("Delta_X").value);
-                const X = parseInt(document.getElementById("X").value);
+                const delta_x = parseFloat(document.getElementById("Delta_X").value);
+                const X = parseFloat(document.getElementById("X").value);
 
                 //Get Function
                 const radioBtns = document.getElementsByName("function");
@@ -134,8 +134,8 @@
         <input type = "radio" id = "f1" name = "function"><label for = "f1">y = x*sin(x)</label>
         <input type = "radio" id = "f2" name = "function"><label for = "f2">y = x**3+x**2+x</label>
         <input type = "radio" id = "f3" name = "function"><label for = "f3">y = e^x</label>
-        <p>Delta X: <input id = "Delta_X"></p>
-        <p>X: <input id = "X"></p>
+        <p>Delta X: <input type = "range" id = "Delta_X" min = "0.01" max = "10" oninput = "differentiate()"></p>
+        <p>X: <input type = "range" id = "X" min = "-20" max = "20" oninput = "differentiate()"></p>
         <button onclick = "differentiate()">Differentiate!</button>
         <br>
         <canvas id = "canvas" width = "800px" height = "600px"></canvas>
