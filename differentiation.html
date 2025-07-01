@@ -1,6 +1,7 @@
 <html>
     <head>
         <script>
+            // Author: Justin Feng
             function func(id,x){
                 if(id === "f1"){
                     return x*Math.sin(x);
@@ -10,11 +11,18 @@
                     return Math.E**x;
                 }
             }
-            function differentiate(){
-                //Scale graph
-                const x_scale = 20;
-                const y_scale = 5;
 
+            //Scale graph
+            let x_scale = 20;
+            let y_scale = 5;
+
+            function scale(){
+                x_scale = parseFloat(document.getElementById("x_scale").value);
+                y_scale = parseFloat(document.getElementById("y_scale").value);
+            }
+
+
+            function differentiate(){
                 // Set Up Canvas
                 const canvas = document.querySelector("#canvas");
                 const ctx = canvas.getContext("2d");
@@ -25,6 +33,11 @@
 
                 //Get Function
                 const radioBtns = document.getElementsByName("function");
+
+                const xslider = document.querySelector('#Delta_X');
+                xslider.min = -400/x_scale;
+                xslider.max = 400/x_scale;
+
 
                 let id = "";
                 radioBtns.forEach((btn)=>{
@@ -131,6 +144,10 @@
         </script>
     </head>
     <body>
+        <p>X Scale: <input id = "x_scale" name = "scale" value = "20"></p>
+        <p>Y Scale: <input id = "y_scale" name = "scale" value = "5"></p>
+        <button onclick = "scale()" name = "scale">Scale!</button>
+        <br><br>
         <input type = "radio" id = "f1" name = "function"><label for = "f1">y = x*sin(x)</label>
         <input type = "radio" id = "f2" name = "function"><label for = "f2">y = x**3+x**2+x</label>
         <input type = "radio" id = "f3" name = "function"><label for = "f3">y = e^x</label>
