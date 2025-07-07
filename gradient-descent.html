@@ -1,0 +1,175 @@
+<html>
+    <head>
+        <script>
+            function DerivativeX(id,x,y){
+                if(id === "f1"){
+                    return 2*x+2*y+4;
+                } else {
+                    return 4*x**3-4*x;
+                }
+            }
+            function DerivativeY(id,x,y){
+                if (id === "f1"){
+                    return 2*x+6*y+5;
+                } else {
+                    return 2*y;
+                }
+            }
+
+            function round(number,places){
+                return Math.round(number*10**places)/10**places;
+            }
+
+            function drawContour(x,y,id,alpha,ctx,xScale,yScale,color){
+                const maxCount = 5000;
+
+                let prevX = x;
+                let prevY = y;
+                let curX = x;
+                let curY = y;
+
+                ctx.beginPath();
+
+                ctx.strokeStyle = color;
+
+                for(let i = 0;i<maxCount;i++){
+                    curX += alpha*DerivativeY(id,curX,curY);
+                    curY += -1*alpha*DerivativeX(id,curX,curY);
+                    
+                    ctx.moveTo(prevX*xScale+400,-1*prevY*yScale+300);
+                    ctx.lineTo(curX*xScale+400,-1*curY*yScale+300);
+
+                    prevX = curX;
+                    prevY = curY;
+
+                    if(((curX-x)**2+(curY-y)**2)<0.03 && i > 500){
+                        break;
+                    } 
+                }
+                ctx.stroke();
+
+            }
+            
+            function GradientDescent(){
+                //Scale Factors
+                const Xscale = 30;
+                const Yscale = 30;
+
+                //Get the function
+                const radioBtns = document.getElementsByName("function");
+
+                let id = "";
+                radioBtns.forEach((btn)=>{
+                    if(btn.checked){
+                        id = btn.id;
+                    }
+                });
+
+                //Get variables
+                let x = parseFloat(document.getElementById("x").value);
+                let y = parseFloat(document.getElementById("y").value);
+                const alpha = parseFloat(document.getElementById("alpha").value);
+
+                //Compute Partial Derivatives
+                let dx = DerivativeX(id,x,y);
+                let dy = DerivativeY(id,x,y);
+
+                //Start Drawing
+                const canvs = document.querySelector("#canvas");
+                const ctx = canvas.getContext("2d");
+
+                ctx.clearRect(0,0,800,600);
+                ctx.beginPath();
+                ctx.strokeStyle = "black";
+
+                //Draw Axis
+                ctx.moveTo(0,300);
+                ctx.lineTo(800,300);
+                ctx.moveTo(400,0);
+                ctx.lineTo(400,600);
+
+                //Draw Arrows
+                ctx.moveTo(400,0);
+                ctx.lineTo(395,5);
+                ctx.moveTo(400,0);
+                ctx.lineTo(405,5);
+
+                ctx.moveTo(800,300);
+                ctx.lineTo(795,295);
+                ctx.moveTo(800,300);
+                ctx.lineTo(795,305);
+
+
+                //Draw Ticks
+                for(let i = 1;i<8;i++){
+                    ctx.moveTo(i*50,295);
+                    ctx.lineTo(i*50,305);
+                }
+                for(let i = 9;i<16;i++){
+                    ctx.moveTo(i*50,295);
+                    ctx.lineTo(i*50,305);
+                }
+                for(let i = 1;i<6;i++){
+                    ctx.moveTo(405,i*50);
+                    ctx.lineTo(395,i*50);
+                }
+                for(let i = 7;i<12;i++){
+                    ctx.moveTo(405,i*50);
+                    ctx.lineTo(395,i*50);
+                }
+
+
+                let prevX = x;
+                let prevY = y;
+
+
+                while (dx**2 + dy**2 > 10**(-5)){
+                    //Compute Partial Derivatives
+                    dx = DerivativeX(id,x,y);
+                    dy = DerivativeY(id,x,y);
+
+                    //Calculate a step
+                    x -= alpha * dx;
+                    y -= alpha * dy;
+
+                    ctx.moveTo(prevX*Xscale+400,-1*prevY*Yscale+300);
+                    ctx.lineTo(x*Xscale+400,-1*y*Yscale+300);
+
+
+                    prevX = x;
+                    prevY = y;
+                }
+
+                
+
+                
+
+                ctx.stroke();
+
+                //Draw Contours
+                drawContour(1,0,id,alpha,ctx,Xscale,Xscale,"lightgreen");
+                drawContour(2,0,id,alpha,ctx,Xscale,Xscale,"lightblue");
+                drawContour(3,0,id,alpha,ctx,Xscale,Xscale,"red");
+                drawContour(4,0,id,alpha,ctx,Xscale,Xscale,"yellow");
+                drawContour(5,0,id,alpha,ctx,Xscale,Xscale,"purple");
+
+                document.getElementById("xResult").innerHTML = x;
+                document.getElementById("yResult").innerHTML = y;
+            }
+
+        </script>
+    </head>
+    <body>
+        <p>X: <input id = "x"></p>
+        <p>Y: <input id = "y"></p>
+        <p>Alpha: <input id = "alpha"></p>
+        <input type = "radio" id = "f1" name = "function"><label for = "f1">x^2+2xy+3y^2+4x+5y+6</label>
+        <input type = "radio" id = "f2" name = "function"><label for = "f2">x^4-2x^2+y^2</label>
+        <button onclick = "GradientDescent()">Calculate!</button>
+        <br>
+        <canvas id = "canvas" width = "800px" height = "600px"></canvas>
+        <p>Answers:</p>
+        <p>X: </p><p id = "xResult"></p>
+        <p>Y: </p><p id = "yResult"></p>
+    </body>
+</html>
